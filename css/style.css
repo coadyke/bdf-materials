@@ -363,3 +363,60 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 480px) {
   .tech-pillars { grid-template-columns: 1fr; }
 }
+
+/* ── Industry Insights (novora sync) ── */
+.insights-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 32px;
+}
+.insight-card {
+  background: var(--white); border: 1px solid var(--gray-1);
+  border-radius: var(--radius); padding: 24px; transition: all 0.2s ease;
+  display: block; text-decoration: none; color: inherit;
+}
+.insight-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.08);
+  border-color: var(--bdf-l);
+}
+.insight-card.skeleton {
+  background: var(--gray-0); border-color: #eee; pointer-events: none;
+}
+
+.insight-tags { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.insight-tag {
+  font-size: 11px; padding: 2px 8px; background: var(--bdf-pale);
+  color: var(--bdf); border-radius: 3px; font-weight: 500;
+  letter-spacing: .3px;
+}
+.insight-title {
+  font-size: 17px; font-weight: 700; line-height: 1.5;
+  color: var(--bdf); margin-bottom: 8px;
+}
+.insight-summary {
+  font-size: 14px; color: var(--gray-4); line-height: 1.7; margin-bottom: 12px;
+}
+.insight-date {
+  font-size: 12px; color: var(--gray-3); font-variant-numeric: tabular-nums;
+}
+
+/* Skeleton animation */
+.sk-line {
+  height: 14px; background: #e5e7eb; border-radius: 4px; margin-bottom: 8px; width: 100%;
+}
+.sk-line.short { width: 60%; }
+.sk-meta {
+  height: 10px; background: #f3f4f6; border-radius: 4px; width: 30%; margin-top: 10px;
+}
+
+.insights-cta {
+  text-align: center; margin-top: 32px;
+}
+.insights-cta .hero-btn-primary {
+  display: inline-block; padding: 12px 32px; font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .insights-grid { grid-template-columns: 1fr; gap: 12px; }
+  .insight-card { padding: 18px; }
+  .insight-title { font-size: 16px; }
+}

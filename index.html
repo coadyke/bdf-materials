@@ -286,6 +286,27 @@
     </div>
   </section>
 
+  <!-- Industry Insights — synced from novora knowledge base -->
+  <section class="section section-offw" id="insights">
+    <div class="container">
+      <div class="section-label">产业观察</div>
+      <h2 class="section-title">来自 novora 知识库<br>最新研究文章</h2>
+      <div class="section-intro">
+        <p>贝多芬新材料不仅是材料供应商，更是产业知识的建设者。以下文章来自我们的产业知识平台 <strong>novora</strong>，覆盖包装、材料、制造、质量、AI 与可持续发展。</p>
+      </div>
+
+      <div class="insights-grid" id="insights-grid">
+        <div class="insight-card skeleton"><div class="sk-line"></div><div class="sk-line short"></div><div class="sk-meta"></div></div>
+        <div class="insight-card skeleton"><div class="sk-line"></div><div class="sk-line short"></div><div class="sk-meta"></div></div>
+        <div class="insight-card skeleton"><div class="sk-line"></div><div class="sk-line short"></div><div class="sk-meta"></div></div>
+      </div>
+
+      <div class="insights-cta">
+        <a href="https://novora.cc" target="_blank" class="hero-btn-primary">访问 novora 知识库 →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- Contact / Footer -->
   <footer class="footer" id="contact">
     <div class="container">
@@ -327,5 +348,33 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script>
+    // Fetch latest articles from novora knowledge base
+    (function(){
+      const grid = document.getElementById('insights-grid');
+      if (!grid) return;
+
+      const FEED_URL = 'https://coadyke.github.io/novora-site/articles/feed.json';
+
+      fetch(FEED_URL)
+        .then(r => r.json())
+        .then(articles => {
+          if (!articles.length) return;
+          grid.innerHTML = articles.slice(0, 3).map(a => (
+            '<a href="' + a.url + '" target="_blank" class="insight-card" rel="noopener">' +
+              '<div class="insight-tags">' +
+                a.tags.map(t => '<span class="insight-tag">' + t + '</span>').join('') +
+              '</div>' +
+              '<h3 class="insight-title">' + a.title + '</h3>' +
+              '<p class="insight-summary">' + a.summary + '</p>' +
+              '<span class="insight-date">' + a.date + '</span>' +
+            '</a>'
+          )).join('');
+        })
+        .catch(function(){
+          // Fallback: keep skeleton as visual placeholder
+        });
+    })();
+  </script>
 </body>
 </html>
