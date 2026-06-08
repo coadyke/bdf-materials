@@ -378,5 +378,27 @@
         });
     })();
   </script>
+  <script>
+    // Auto-refresh: check for new version on load & tab return
+    (function() {
+      var VER = 'https://coadyke.github.io/bdf-materials/version.txt';
+      var KEY = 'bdf_v';
+      function check() {
+        fetch(VER + '?t=' + Date.now(), {cache: 'no-store'})
+          .then(function(r) { return r.text(); })
+          .then(function(v) {
+            v = v.trim();
+            var old = localStorage.getItem(KEY);
+            localStorage.setItem(KEY, v);
+            if (old && old !== v) location.reload();
+          })
+          .catch(function(){});
+      }
+      check();
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) check();
+      });
+    })();
+  </script>
 </body>
 </html>
