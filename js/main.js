@@ -13,6 +13,71 @@
   var glow2 = hero && hero.querySelector('.hero-glow-2');
   var mouseX = 0, mouseY = 0, ticking = false;
 
+  /* Random flowing color field. The original hero remains the fallback. */
+  var fluidCanvas = document.getElementById('heroFluid');
+  var fluidContext = fluidCanvas && fluidCanvas.getContext('2d', { alpha: false });
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fluidPalettes = [
+    ['#102B52', '#F05A4F', '#F2B84B', '#25B8A7', '#6757D9'],
+    ['#102B52', '#E65396', '#F37A43', '#3D75DB', '#35BDA5'],
+    ['#102B52', '#8B52D4', '#ED5B51', '#DEB94B', '#2FA4C2'],
+    ['#102B52', '#26B59F', '#4A68D5', '#E45386', '#ED974B']
+  ];
+  var fluidPalette = fluidPalettes[Math.floor(Math.random() * fluidPalettes.length)];
+  var fluidBlobs = fluidPalette.slice(1).map(function (color, index) {
+    return {
+      color: color,
+      x: 0.18 + Math.random() * 0.64,
+      y: 0.16 + Math.random() * 0.68,
+      radius: 0.3 + Math.random() * 0.2,
+      speed: 0.00009 + Math.random() * 0.00007,
+      phase: Math.random() * Math.PI * 2,
+      orbit: 0.06 + index * 0.018
+    };
+  });
+
+  function resizeFluid() {
+    if (!fluidCanvas || !fluidContext) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    fluidCanvas.width = Math.round(fluidCanvas.clientWidth * dpr);
+    fluidCanvas.height = Math.round(fluidCanvas.clientHeight * dpr);
+    fluidContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function drawFluid(time) {
+    if (!fluidCanvas || !fluidContext) return;
+    var width = fluidCanvas.clientWidth;
+    var height = fluidCanvas.clientHeight;
+    fluidContext.fillStyle = fluidPalette[0];
+    fluidContext.fillRect(0, 0, width, height);
+    fluidContext.globalCompositeOperation = 'screen';
+
+    fluidBlobs.forEach(function (blob, index) {
+      var movement = reduceMotion ? 0 : time * blob.speed;
+      var x = (blob.x + Math.sin(movement + blob.phase) * blob.orbit) * width;
+      var y = (blob.y + Math.cos(movement * 0.78 + blob.phase) * blob.orbit) * height;
+      var pulse = 1 + Math.sin(movement * 1.3 + index) * 0.08;
+      var radius = blob.radius * Math.max(width, height) * pulse;
+      var gradient = fluidContext.createRadialGradient(x, y, 0, x, y, radius);
+      gradient.addColorStop(0, blob.color + 'E6');
+      gradient.addColorStop(0.38, blob.color + '9C');
+      gradient.addColorStop(1, blob.color + '00');
+      fluidContext.fillStyle = gradient;
+      fluidContext.beginPath();
+      fluidContext.arc(x, y, radius, 0, Math.PI * 2);
+      fluidContext.fill();
+    });
+
+    fluidContext.globalCompositeOperation = 'source-over';
+    if (!reduceMotion) requestAnimationFrame(drawFluid);
+  }
+
+  if (fluidCanvas && fluidContext) {
+    resizeFluid();
+    drawFluid(0);
+    window.addEventListener('resize', resizeFluid, { passive: true });
+  }
+
   function updateGlow() {
     if (!glow1 || !glow2) return;
     var scrollOffset = window.scrollY * 0.04;
