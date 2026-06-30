@@ -361,7 +361,7 @@
       const grid = document.getElementById('insights-grid');
       if (!grid) return;
 
-      const FEED_URL = 'https://lostravelerk.github.io/novora-site/articles/feed.json?t=' + Date.now();
+      const FEED_URL = 'https://novora-site.pages.dev/articles/feed.json?t=' + Date.now();
 
       fetch(FEED_URL)
         .then(r => r.json())
@@ -386,7 +386,7 @@
   <script>
     // Auto-refresh: check for new version on load & tab return
     (function() {
-      var VER = 'https://lostravelerk.github.io/bdf-materials/version.txt';
+      var VER = 'https://bdf-materials.pages.dev/version.txt';
       var KEY = 'bdf_v';
       function check() {
         fetch(VER + '?t=' + Date.now(), {cache: 'no-store'})
